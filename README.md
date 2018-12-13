@@ -26,7 +26,8 @@ A .env file is used to simplify configuration management of the High Score API a
     DB_PASSWORD
     CORS_ALLOW_ORIGIN
     TABLE_HIGH_SCORES
-    TABLE_ORDERING
+    TABLE_ORDER_DESC
+    TABLE_ORDER_ASC
 
 ### DB_HOST
 Configure the hostname to use for the MySQL database connection.
@@ -53,15 +54,20 @@ Configure the Access-Control-Allow-Origin Header URL. The example below sets the
 
     CORS_ALLOW_ORIGIN="http://localhost:4000"
 
-### TABLE_ORDERING
+### TABLE_HIGH_SCORES
 Configure the MySQL database table that is storing the High Score data.
 
     TABLE_HIGH_SCORES='high_scores'
 
-### TABLE_HIGH_SCORE
-Configure the MySQL table that stores the High Scores to sort the scores by top High Score by default.
+### TABLE_ORDER_DESC
+Configure the MySQL table that orders the high score results in descending order to sort the scores by top High Score by default.
 
-    TABLE_ORDERING='high_score'
+    TABLE_ORDER_DESC='high_score'
+
+### TABLE_ORDER_ASC
+Configure the MySQL table that orders the high score results in ascending order to sort the scores by another value by such as username or user id.
+
+    TABLE_ORDER_ASC='username'
 
 ## Connect High Score API to a Database
 The database connection settings are stored as environment variables in a .env file for easy setup of local, dev, staging, and production enviroments for the API.
