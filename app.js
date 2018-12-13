@@ -36,7 +36,7 @@ app.use(function(req, res, next){
   res.header("Access-Control-Allow-Credentials", true);
   res.setHeader('Content-Type', 'application/json');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  console.log("CORS Origin set to" + process.env.CORS_ALLOW_ORIGIN + ".");
+  console.log("CORS Origin set to " + process.env.CORS_ALLOW_ORIGIN + ".");
   global.connection = mysql.createConnection({
       host     : process.env.DB_HOST,
       user     : process.env.DB_USER,
@@ -48,7 +48,7 @@ app.use(function(req, res, next){
 });
 
 // schedule tasks to be run on the server
-cron.schedule("*/15 * * * *", function(req, res, next) {
+cron.schedule("*/1 * * * *", function(req, res, next) {
   console.log("---------------------");
   console.log("Running Cron Job");
   global.connection = mysql.createConnection({
@@ -58,7 +58,7 @@ cron.schedule("*/15 * * * *", function(req, res, next) {
       password : process.env.DB_PASSWORD
   });
   connection.connect();
-  connection.query('SELECT * from stats ORDER BY high_score DESC, userId ASC LIMIT 100', function (error, results, fields) {
+  connection.query('SELECT * from ' + process.env.TABLE_HIGH_SCORES + ' ORDER BY ' + process.env.TABLE_ORDER_DESC + ' DESC, ' + process.env.TABLE_ORDER_ASC + ' ASC LIMIT 100', function (error, results, fields) {
     if(error){
       const content = JSON.stringify({"status":5200, "error": error, "response": "Internal Server Error"});
     } else {
@@ -79,7 +79,7 @@ app.all('/data',function(req, res){
   res.header("Access-Control-Allow-Origin", process.env.CORS_ALLOW_ORIGIN);
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  console.log("CORS Origin set to" + process.env.CORS_ALLOW_ORIGIN + ".");
+  console.log("CORS Origin set to " + process.env.CORS_ALLOW_ORIGIN + ".");
 });
 
 app.use('/api/v1/data', express.static(path.join(__dirname, 'data'), {
@@ -107,7 +107,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 module.exports = app;
 const server = http.createServer(app);
