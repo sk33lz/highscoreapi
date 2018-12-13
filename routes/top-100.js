@@ -3,7 +3,7 @@ var router = express.Router();
 const fs = require('fs');
 
 router.get('/', function(req, res, next) {
-  connection.query('SELECT * from stats ORDER BY high_score DESC, userId ASC LIMIT 100', function (error, results, fields) {
+  connection.query('SELECT * from ' + process.env.TABLE_HIGH_SCORES + ' ORDER BY ' + process.env.TABLE_ORDERING + ' DESC, userId ASC LIMIT 100', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": "Internal Server Error"})); 
     } else {

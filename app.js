@@ -32,10 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Database connection
 app.use(function(req, res, next){
   res.contentType('application/json');
-  res.header("Access-Control-Allow-Origin", "http://localhost:4000");
+  res.header("Access-Control-Allow-Origin", process.env.CORS_ALLOW_ORIGIN);
   res.header("Access-Control-Allow-Credentials", true);
   res.setHeader('Content-Type', 'application/json');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  console.log("CORS Origin set to" + process.env.CORS_ALLOW_ORIGIN + ".");
   global.connection = mysql.createConnection({
       host     : process.env.DB_HOST,
       user     : process.env.DB_USER,
@@ -75,9 +76,10 @@ cron.schedule("*/15 * * * *", function(req, res, next) {
 });
 
 app.all('/data',function(req, res){
-  res.header("Access-Control-Allow-Origin", "http://localhost:4000");
+  res.header("Access-Control-Allow-Origin", process.env.CORS_ALLOW_ORIGIN);
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  console.log("CORS Origin set to" + process.env.CORS_ALLOW_ORIGIN + ".");
 });
 
 app.use('/api/v1/data', express.static(path.join(__dirname, 'data'), {
