@@ -38,13 +38,18 @@ A sample database will be provided for getting started with the API soon.
 Below is a tentatively planned development roadmap for the High Score API.
 
 1. Add support for additional database software.
-
     - Add Postgres database support.
     - Add MongoDB database support.
     - Add SQLite database support.
     - Possibly support other databases.
-2. Standalone API Front-end
 
+2. Add integration badges.
+    - Security: https://snyk.io/
+    - CI Builds: https://travis-ci.org/
+    - Code Coverage: https://coveralls.io/ or https://codecov.io/
+    - JavaScript Linting: https://github.com/dwyl/goodparts
+
+3. Standalone API Front-end
     - Build a standalone route to display the high score data without any other integration needed.
 
 ## Contribute to the High Score API
