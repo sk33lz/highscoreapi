@@ -58,7 +58,7 @@ cron.schedule("*/1 * * * *", function(req, res, next) {
       password : process.env.DB_PASSWORD
   });
   connection.connect();
-  connection.query('SELECT * from ' + process.env.TABLE_HIGH_SCORES + ' ORDER BY ' + process.env.TABLE_ORDER_DESC + ' DESC, ' + process.env.TABLE_ORDER_ASC + ' ASC LIMIT 100', function (error, results, fields) {
+  connection.query('SELECT ' + process.env.SELECT_COLUMNS + ' from ' + process.env.TABLE_HIGH_SCORES + ' ORDER BY ' + process.env.TABLE_ORDER_DESC + ' DESC, ' + process.env.TABLE_ORDER_ASC + ' ASC LIMIT 100', function (error, results, fields) {
     if(error){
       const content = JSON.stringify({"status":5200, "error": error, "response": "Internal Server Error"});
     } else {
