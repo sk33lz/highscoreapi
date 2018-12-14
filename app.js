@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mysql= require('mysql');
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 
 require('dotenv').config();
@@ -20,6 +21,18 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// Certificate
+const privateKey = fs.readFileSync('/home/jason/highscoreapi/ssl/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/home/jason/highscoreapi/ssl/cert.pem', 'utf8');
+const ca = fs.readFileSync('/home/jason/highscoreapi/ssl/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -144,4 +157,6 @@ setTimeout(startupProcess, 1500, 'funky');
 
 module.exports = app;
 const server = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 server.listen(4001);
+httpsServer.listen(4443);
