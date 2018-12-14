@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": error, "response": results}));
     }
   });
+  connection.end();
 });
 
 module.exports = router;

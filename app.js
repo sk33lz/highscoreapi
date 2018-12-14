@@ -71,6 +71,7 @@ cron.schedule("*/1 * * * *", function(req, res, next) {
       });
     }
   });
+  connection.end();
   console.log("---------------------");
   console.log("Cron Run Successfully.");
 });
@@ -107,6 +108,39 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+function startupProcess(arg) {
+  global.connection = mysql.createConnection({
+    host     : process.env.DB_HOST,
+    user     : process.env.DB_USER,
+    database : process.env.DB_DATABASE,
+    password : process.env.DB_PASSWORD
+  });
+  connection.connect();
+  connection.query('SELECT ' + process.env.SELECT_COLUMNS + ' from ' + process.env.TABLE_HIGH_SCORES + ' ORDER BY ' + process.env.TABLE_ORDER_DESC + ' DESC, ' + process.env.TABLE_ORDER_ASC + ' ASC LIMIT 100', function (error, results, fields) {
+    if(error){
+      const content = JSON.stringify({"status":5200, "error": error, "response": "Internal Server Error"});
+    } else {
+        console.log("---------------------------");
+        console.log("Initiating App Startup Tasks...");
+        console.log("---------------------------");
+        const content = JSON.stringify({"status": 200, "error": error, "response": results});
+        fs.writeFile('./data/top-100.json', content, 'utf8', function (error) {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Writing ./data/top-100.json file...");
+        console.log("The top-100.json file was saved to the data directory!");
+        console.log("---------------------------");
+        console.log("App Startup Tasks Completed!");
+        console.log("---------------------------");
+    });
+  }
+  });
+  connection.end();
+}
+
+setTimeout(startupProcess, 1500, 'funky');
 
 module.exports = app;
 const server = http.createServer(app);
