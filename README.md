@@ -6,7 +6,7 @@ This repository contains a high score API written in Node.js that connects to a 
   - MySQL
 
 ## How Does High Score API Work?
-A MySQL query is used to write high score table rows data to a JSON file or JSON object using the [JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) function. The results of the query are displayed at a configurable route on a Node.js Express server in a JSON encoding to be injested easily by other web based applications.
+A MySQL query is used to write high score table rows data to a JSON file or JSON object using the [JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) function. The results of the query are displayed at a configurable route on a Node.js Express server in a JSON encoding to be ingested easily by other web based applications.
 
 ## Install High Score API
 1. Clone the repository.
@@ -18,16 +18,20 @@ A MySQL query is used to write high score table rows data to a JSON file or JSON
         npm install
 
 ## Configure a .env File with Environment Variables for 
-A .env file is used to simplify configuration management of the High Score API application, and keep sensitive data like the Database password out of the git repository. It has been added to the .gitignore file by default. The .env should contain the following variables.
+A .env file is used to simplify configuration management of the High Score API application, and keep sensitive data like the Database password out of the git repository. It has been added to the .gitignore file by default. The .env should contain the following **REQUIRED** variables.
 
     DB_HOST
     DB_USER
     DB_DATABASE
     DB_PASSWORD
+    SSL_CA
+    SSL_CERTIFICATE
+    SSL_PRIVATEKEY
     CORS_ALLOW_ORIGIN
     TABLE_HIGH_SCORES
     TABLE_ORDER_DESC
     TABLE_ORDER_ASC
+    TABLE_SELECT_COLUMNS
 
 ### DB_HOST
 Configure the hostname to use for the MySQL database connection.
@@ -49,6 +53,21 @@ Configure the database password to use for the MySQL connection.
 
     DB_PASSWORD='secret'
 
+### SSL_CA
+Configure the SSL Certificate Authority certificate path for the HighScoreAPI app. Example for `www.domain.tld` using LetsEncrypt SSL.
+
+    SSL_CA='/etc/letsencrypt/live/www.domain.tld/chain.pem'
+
+### SSL_CERTIFICATE
+Configure the SSL Certificate path for the HighScoreAPI app. Example for `www.domain.tld` using LetsEncrypt SSL.
+
+    SSL_CERTIFICATE='/etc/letsencrypt/live/www.domain.tld/fullchain.pem'
+
+### SSL_PRIVKEY
+Configure the SSL Private Key path for the HighScoreAPI app. Example for `www.domain.tld` using LetsEncrypt SSL.
+
+    SSL_PRIVKEY='/etc/letsencrypt/live/www.domain.tld/privkey.pem'
+
 ### CORS_ALLOW_ORIGIN
 Configure the Access-Control-Allow-Origin Header URL. The example below sets the Origin used for a typical localhost Node.JS server and port.
 
@@ -69,6 +88,11 @@ Configure the MySQL table that orders the high score results in ascending order 
 
     TABLE_ORDER_ASC='username'
 
+### SELECT_COLUMNS
+Configure the columns that your database will select to render in the JSON object that is displayed in the table using the [JSON.stringify()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) function.
+
+    SELECT_COLUMNS='highscore,username,timeplayed'
+
 ## Connect High Score API to a Database
 The database connection settings are stored as environment variables in a .env file for easy setup of local, dev, staging, and production enviroments for the API.
 
@@ -79,10 +103,18 @@ The default MySQL database connection environment variables are defined below. S
 
 #### Example:
 
-    DB_HOST=localhost
-    DB_USER=high_scores
-    DB_DATABASE=high_scores
-    DB_PASSWORD=secret
+    DB_HOST='localhost'
+    DB_USER='high_scores'
+    DB_DATABASE='high_scores'
+    DB_PASSWORD='secret'
+    TABLE_HIGH_SCORES='high_scores'
+    TABLE_ORDER_DESC='high_score'
+    TABLE_ORDER_ASC='username'
+    SELECT_COLUMNS='highscore,username,timeplayed'
+    CORS_ALLOW_ORIGIN='http://localhost:4000'
+    SSL_CA='/etc/letsencrypt/live/www.domain.tld/chain.pem'
+    SSL_CERTIFICATE='/etc/letsencrypt/live/www.domain.tld/fullchain.pem'
+    SSL_PRIVKEY='/etc/letsencrypt/live/www.domain.tld/privkey.pem'
 
 Developers can modify the following variable names or replace the following variables with actual values if desired in the [app.js](https://github.com/sk33lz/highscoreapi/blob/master/app.js).
 
@@ -90,6 +122,15 @@ Developers can modify the following variable names or replace the following vari
     process.env.DB_USER
     process.env.DB_DATABASE
     process.env.DB_PASSWORD
+    process.env.TABLE_HIGH_SCORES
+    process.env.TABLE_ORDER_DESC
+    process.env.TABLE_ORDER_ASC
+    process.env.SELECT_COLUMNS
+    process.env.CORS_ALLOW_ORIGIN
+    process.env.SSL_CA
+    process.env.SSL_CERTIFICATE
+    process.env.SSL_PRIVKEY
+
 
 A database export with sample high score data will soon be provided for getting started with the High Score API.
 

@@ -22,17 +22,16 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Certificate
-const privateKey = fs.readFileSync('/home/jason/highscoreapi/ssl/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/home/jason/highscoreapi/ssl/cert.pem', 'utf8');
-const ca = fs.readFileSync('/home/jason/highscoreapi/ssl/chain.pem', 'utf8');
+// Node App SSL Certificate
+const privateKey = fs.readFileSync(process.env.SSL_PRIVATEKEY, 'utf8');
+const certificate = fs.readFileSync(process.env.SSL_CERTIFICATE, 'utf8');
+const ca = fs.readFileSync(process.env.SSL_CA, 'utf8');
 
 const credentials = {
 	key: privateKey,
 	cert: certificate,
 	ca: ca
 };
-
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -42,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Database connection
+// Database connection
 app.use(function(req, res, next){
   res.contentType('application/json');
   res.header("Access-Control-Allow-Origin", process.env.CORS_ALLOW_ORIGIN);
